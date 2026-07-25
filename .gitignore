@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+*.egg-info/
+
+# Leftover fastai export bundled with the source dataset, not used by this pipeline
+retina_data/gaussian_filtered_images/gaussian_filtered_images/export.pkl
+
+# Local env/secrets
+.env
+
+# OS cruft
+.DS_Store
+Thumbs.db
