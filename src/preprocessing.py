@@ -61,3 +61,31 @@ def make_dataset(directory: str, batch_size: int = 32, shuffle: bool = True, see
         num_parallel_calls=tf.data.AUTOTUNE,
     )
     return ds.prefetch(tf.data.AUTOTUNE)
+
+
+def make_train_val_datasets(directory: str, val_split: float = 0.15,
+                            batch_size: int = 32, seed: int = 42):
+    """Splits a training directory into (train_ds, val_ds) using a deterministic
+    seed, so the validation set used for early stopping / checkpointing is carved
+    out of the training data and the separate test set stays completely frozen
+    for final evaluation. Both subsets go through the shared resize/normalize path.
+    """
+    def _load(subset):
+        ds = tf.keras.utils.image_dataset_from_directory(
+            directory,
+            labels="inferred",
+            label_mode="int",
+            class_names=CLASS_NAMES,
+            image_size=(IMG_SIZE, IMG_SIZE),
+            batch_size=batch_size,
+            shuffle=True,
+            seed=seed,
+            validation_split=val_split,
+            subset=subset,
+        )
+        return ds.map(
+            lambda x, y: (resize_and_normalize(x), y),
+            num_parallel_calls=tf.data.AUTOTUNE,
+        ).prefetch(tf.data.AUTOTUNE)
+
+    return _load("training"), _load("validation")
