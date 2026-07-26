@@ -1,0 +1,10 @@
+.git
+__pycache__
+**/__pycache__
+*.pyc
+data/
+notebook/
+.venv
+venv
+*.md
+.gitignore
