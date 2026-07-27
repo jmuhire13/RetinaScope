@@ -8,6 +8,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY main.py .
 COPY src/ src/
 COPY models/ models/
+# Base training set + frozen test set baked in, so retraining can merge base
+# data with uploads and evaluate promotions without any external fetch.
+COPY data/ data/
 
 EXPOSE 8000
 

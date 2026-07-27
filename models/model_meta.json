@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "architecture": "MobileNetV2 (two-phase fine-tuning)",
+  "trained_at": "2026-07-27",
+  "last_retrain": null,
+  "test_accuracy": 0.8142,
+  "test_macro_f1": 0.7417,
+  "training_images": 2179
+}

@@ -2,7 +2,10 @@
 __pycache__
 **/__pycache__
 *.pyc
-data/
+# NOTE: data/ is intentionally NOT ignored - the base training set must live
+# inside the image so retraining can merge it with uploads (Stage 5). Only the
+# runtime-generated upload staging area is excluded.
+data/uploads/
 notebook/
 .venv
 venv
