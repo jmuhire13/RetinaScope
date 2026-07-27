@@ -1,0 +1,32 @@
+# Local scaling harness for the Locust load test (Stage 7).
+# Run the API behind nginx and vary replica count:
+#   docker compose up -d --scale api=1
+#   docker compose up -d --scale api=2
+#   docker compose up -d --scale api=4
+# nginx stays the single entry point on http://localhost:8080 across all runs.
+services:
+  api:
+    image: retinascope-api:latest
+    # No host port mapping: replicas must not fight over a port. nginx reaches
+    # them over the internal network via the "api" service name (port 8000).
+    expose:
+      - "8000"
+    environment:
+      - RETRAIN_EPOCHS=1
+    # Cap each replica at 1 CPU so the scaling test is meaningful: TensorFlow
+    # intra-op threading would otherwise let one replica grab all host cores,
+    # hiding any benefit from adding replicas. With this cap, 1/2/4 replicas =
+    # 1/2/4 cores of serving capacity, leaving the host's other cores for the
+    # Locust load generator + nginx + OS.
+    cpus: "1.0"
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:1.27-alpine
+    depends_on:
+      - api
+    ports:
+      - "8080:80"
+    volumes:
+      - ./deploy/nginx.conf:/etc/nginx/nginx.conf:ro
+    restart: unless-stopped
