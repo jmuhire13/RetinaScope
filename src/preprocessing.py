@@ -7,13 +7,16 @@ already Ben-Graham gaussian-filtered by the dataset provider - that's what
 filtered yet, so the inference path applies the same filter before handing
 the image to the shared resize/normalize step used by training.
 """
+import os
+import sys
+
 import cv2
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 
-IMG_SIZE = 224
-CLASS_NAMES = ["No_DR", "Mild_Moderate", "Severe_Proliferate_DR"]
+sys.path.insert(0, os.path.dirname(__file__))
+from constants import IMG_SIZE, CLASS_NAMES  # re-exported for existing importers
 
 
 def ben_graham_filter(image: np.ndarray, sigma_x: float = 10) -> np.ndarray:
