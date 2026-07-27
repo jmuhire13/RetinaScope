@@ -1,7 +1,11 @@
-fastapi==0.140.0
-uvicorn[standard]==0.51.0
-python-multipart==0.0.32
-tensorflow==2.21.0
+# UI (Streamlit) dependencies. This is the repo-root requirements.txt so
+# Streamlit Community Cloud auto-detects it. Deliberately excludes TensorFlow
+# (the UI talks to the API over HTTP and never runs the model itself).
+# API + training/notebook dependencies live in requirements-api.txt.
+streamlit==1.60.0
+requests==2.32.5
 numpy==2.2.6
-pillow==12.1.0
+pandas==3.0.0
+matplotlib==3.10.8
+seaborn==0.13.2
 opencv-python-headless==4.12.0.88

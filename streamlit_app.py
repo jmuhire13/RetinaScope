@@ -20,7 +20,10 @@ import streamlit as st
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 from constants import CLASS_NAMES  # lightweight, avoids importing TensorFlow into the UI
 
-DEFAULT_API = os.environ.get("API_URL", "http://localhost:8000")
+# Defaults to the public Render API so the Streamlit Cloud deployment works out
+# of the box. Override in the sidebar (e.g. http://localhost:8000) to point at a
+# local API - needed for the retraining demo, which the free Render tier can't run.
+DEFAULT_API = os.environ.get("API_URL", "https://retinascope.onrender.com")
 DATA_DIR = "data"
 sns.set_theme(style="whitegrid")
 
