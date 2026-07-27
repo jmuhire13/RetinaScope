@@ -138,8 +138,10 @@ async def upload_endpoint(background: BackgroundTasks,
     saved = retrain.save_uploaded_images(payload, label)
     pending = retrain.count_uploads()
 
-    # Count-based automatic trigger: once enough new images have accumulated,
-    # kick off retraining automatically (if none is already running).
+    # Count-based automatic trigger: once total pending uploads reach the
+    # threshold, kick off retraining automatically (if none is already running).
+    # Note: pending uploads are cumulative for the session (not reset per
+    # retrain), so once past the threshold, later uploads may re-trigger.
     auto_triggered, job_id = False, None
     if pending >= retrain.AUTO_RETRAIN_THRESHOLD:
         with _job_lock:

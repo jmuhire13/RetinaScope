@@ -188,8 +188,14 @@ def page_retrain():
             st.error(f"API returned {resp.status_code}: {resp.text}")
 
     st.subheader("3. Retraining status")
-    if st.button("Refresh status"):
-        st.rerun()
+    st.caption("Live-updating every 2 seconds while a job runs.")
+    _render_retrain_status()
+
+
+@st.fragment(run_every=2)
+def _render_retrain_status():
+    """Auto-refreshing status panel: polls /status every 2s so retrain progress
+    and before/after metrics update live without a manual refresh."""
     job_id = st.session_state.get("job_id")
     try:
         params = {"job_id": job_id} if job_id else None

@@ -33,8 +33,9 @@ ARCHIVE_DIR = os.environ.get("ARCHIVE_DIR", "models/archive")
 META_PATH = os.environ.get("META_PATH", "models/model_meta.json")
 
 RETRAIN_EPOCHS = int(os.environ.get("RETRAIN_EPOCHS", "5"))
-# Count-based auto-trigger threshold: retraining is suggested/triggered once at
-# least this many images have been uploaded since the last retrain.
+# Count-based auto-trigger threshold: retraining auto-triggers once the total
+# number of pending uploaded images (accumulated in UPLOAD_DIR this session)
+# reaches this count and no retrain is already running.
 AUTO_RETRAIN_THRESHOLD = int(os.environ.get("AUTO_RETRAIN_THRESHOLD", "20"))
 
 
