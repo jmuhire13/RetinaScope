@@ -1,11 +1,15 @@
-# UI (Streamlit) dependencies. This is the repo-root requirements.txt so
-# Streamlit Community Cloud auto-detects it. Deliberately excludes TensorFlow
-# (the UI talks to the API over HTTP and never runs the model itself).
-# API + training/notebook dependencies live in requirements-api.txt.
-streamlit==1.60.0
-requests==2.32.5
-numpy==2.2.6
-pandas==3.0.0
-matplotlib==3.10.8
-seaborn==0.13.2
-opencv-python-headless==4.12.0.88
+# UI (Streamlit) dependencies. Repo-root requirements.txt so Streamlit Community
+# Cloud auto-detects it. Deliberately excludes TensorFlow (the UI talks to the
+# API over HTTP and never runs the model itself). API + training/notebook
+# dependencies live in requirements-api.txt.
+#
+# Loose lower bounds (not exact pins) so pip resolves prebuilt wheels for
+# whatever Python version Streamlit Cloud runs, instead of compiling old exact
+# versions from source. streamlit floored at 1.37 for st.fragment(run_every=...).
+streamlit>=1.37
+requests>=2.31
+numpy>=1.26
+pandas>=2.0
+matplotlib>=3.7
+seaborn>=0.13
+opencv-python-headless>=4.8
