@@ -13,7 +13,7 @@ on non-tabular (image) data: acquisition → preprocessing → training → eval
 | | |
 |---|---|
 | **Live API** (FastAPI) | https://retinascope.onrender.com — interactive docs at [`/docs`](https://retinascope.onrender.com/docs) |
-| **Live UI** (Streamlit) | _added after Streamlit Cloud deploy_ |
+| **Live UI** (Streamlit) | https://retinascope-ml.streamlit.app |
 | **Demo video** (YouTube) | _added after recording_ |
 
 > The API runs on Render's free tier: it **spins down after ~15 min idle**, so the

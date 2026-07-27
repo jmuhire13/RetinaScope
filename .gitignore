@@ -13,6 +13,9 @@ retina_data/gaussian_filtered_images/gaussian_filtered_images/export.pkl
 data/uploads/
 models/archive/
 
+# Personal demo-recording helper (local only, not part of the repo)
+DEMO_SCRIPT.md
+
 # Local env/secrets
 .env
 
