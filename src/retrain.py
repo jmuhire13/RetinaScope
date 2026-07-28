@@ -21,7 +21,7 @@ import numpy as np
 import tensorflow as tf
 
 sys.path.insert(0, os.path.dirname(__file__))
-from preprocessing import resize_and_normalize, make_dataset, CLASS_NAMES, IMG_SIZE
+from preprocessing import resize_and_normalize, make_dataset, ben_graham_filter, CLASS_NAMES, IMG_SIZE
 from prediction import MODEL_PATH
 
 BASE_TRAIN_DIRS = ["data/train", "data/retrain_pool"]
@@ -101,22 +101,39 @@ def _list_labeled_files(dirs):
     return paths, labels
 
 
-def _load_path(path, label):
+def _load_path_maybe_filter(path, label, needs_filter):
+    """Decode an image and, only when needs_filter is true, apply the same
+    Ben-Graham gaussian filter the prediction path uses. Base images on disk are
+    already filtered (needs_filter=False); raw uploaded images are not, so they
+    get filtered here to match the base distribution and the inference path."""
     data = tf.io.read_file(path)
     img = tf.io.decode_image(data, channels=3, expand_animations=False)
     img.set_shape([None, None, 3])
+    img = tf.cond(
+        needs_filter,
+        lambda: tf.ensure_shape(
+            tf.numpy_function(ben_graham_filter, [img], tf.uint8), [None, None, 3]),
+        lambda: img,
+    )
     return resize_and_normalize(img), label
 
 
 def build_training_dataset(batch_size: int = 32, seed: int = 42):
-    dirs = BASE_TRAIN_DIRS + [UPLOAD_DIR]
-    paths, labels = _list_labeled_files(dirs)
+    # Base dirs are already Ben-Graham filtered on disk -> no filter. The upload
+    # dir holds raw user images -> flag them so _load_path_maybe_filter applies
+    # the same filter the prediction path does. Shuffling happens at the (light)
+    # path level before decoding, so the shuffle buffer stays cheap.
+    base_paths, base_labels = _list_labeled_files(BASE_TRAIN_DIRS)
+    upload_paths, upload_labels = _list_labeled_files([UPLOAD_DIR])
+    paths = base_paths + upload_paths
+    labels = base_labels + upload_labels
+    flags = [False] * len(base_paths) + [True] * len(upload_paths)
     if not paths:
         raise RuntimeError("No training images found to retrain on.")
     labels_arr = np.array(labels)
-    ds = tf.data.Dataset.from_tensor_slices((paths, labels))
+    ds = tf.data.Dataset.from_tensor_slices((paths, labels, flags))
     ds = ds.shuffle(len(paths), seed=seed, reshuffle_each_iteration=True)
-    ds = ds.map(_load_path, num_parallel_calls=tf.data.AUTOTUNE)
+    ds = ds.map(_load_path_maybe_filter, num_parallel_calls=tf.data.AUTOTUNE)
     ds = ds.batch(batch_size).prefetch(tf.data.AUTOTUNE)
     return ds, labels_arr
 
