@@ -4,7 +4,7 @@ An end-to-end machine-learning pipeline that grades **diabetic retinopathy (DR)*
 severity from retina fundus photographs, deployed as a live API with a web UI,
 a retraining loop, and a containerised horizontal-scaling load test.
 
-Built for the ALU BSE *Machine Learning Pipeline* summative — the full ML cycle
+Built for *Machine Learning Pipeline* - the full ML cycle
 on non-tabular (image) data: acquisition → preprocessing → training → evaluation
 → deployment → monitoring → retraining → load testing.
 
@@ -14,7 +14,7 @@ on non-tabular (image) data: acquisition → preprocessing → training → eval
 |---|---|
 | **Live API** (FastAPI) | https://retinascope.onrender.com — interactive docs at [`/docs`](https://retinascope.onrender.com/docs) |
 | **Live UI** (Streamlit) | https://retinascope-ml.streamlit.app |
-| **Demo video** (YouTube) | _added after recording_ |
+| **Demo video** (YouTube) | https://youtu.be/wMcIpIkTd9Q |
 
 > The API runs on Render's free tier: it **spins down after ~15 min idle**, so the
 > first request after a pause takes 30–60 s to cold-start. That is expected, not a bug.
@@ -37,16 +37,16 @@ split. The grouping stays clinically coherent: *none / early / vision-threatenin
 
 ### Core features
 
-- **Single-image prediction** — upload one image, get a class + per-class probabilities.
-- **Three dataset feature interpretations** — class-imbalance, colour-balance, and
+- **Single-image prediction** - upload one image, get a class + per-class probabilities.
+- **Three dataset feature interpretations** - class-imbalance, colour-balance, and
   texture-variance analyses (see the notebook / UI Visualizations page).
-- **Bulk upload + retraining** — upload many labelled images and trigger retraining,
+- **Bulk upload + retraining** - upload many labelled images and trigger retraining,
   manually or automatically past an upload threshold.
-- **Promotion gate** — a retrained model is deployed **only if it beats the current
+- **Promotion gate** - a retrained model is deployed **only if it beats the current
   model** on a frozen test set; otherwise the old model is kept. The old model is
   archived and the live model hot-reloads without a restart.
-- **Uptime / status monitoring** — model version, last-retrain timestamp, request counts.
-- **Horizontal-scaling load test** — Locust flood across 1/2/4 container replicas
+- **Uptime / status monitoring** - model version, last-retrain timestamp, request counts.
+- **Horizontal-scaling load test** - Locust flood across 1/2/4 container replicas
   behind nginx.
 
 ---
@@ -73,7 +73,7 @@ split. The grouping stays clinically coherent: *none / early / vision-threatenin
 ```
 
 - **Model:** MobileNetV2 transfer learning (ImageNet base, two-phase fine-tuning).
-- **API:** FastAPI + Uvicorn (single worker — required by the in-memory retrain job lock).
+- **API:** FastAPI + Uvicorn (single worker, required by the in-memory retrain job lock).
 - **UI:** Streamlit (decoupled from TensorFlow; talks to the API over HTTP).
 - **Containerisation:** Docker; docker-compose + nginx for the scaling test.
 - **Cloud:** Render (public API). UI on Streamlit Cloud.
