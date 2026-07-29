@@ -1,4 +1,4 @@
-# RetinaScope — Diabetic Retinopathy Classification Pipeline
+# RetinaScope - Diabetic Retinopathy Classification Pipeline
 
 An end-to-end machine-learning pipeline that grades **diabetic retinopathy (DR)**
 severity from retina fundus photographs, deployed as a live API with a web UI,
